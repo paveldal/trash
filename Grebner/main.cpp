@@ -75,16 +75,23 @@ void Senior_member(int polinom[100][4], int senior_mem[4])
     {
         if(senior_mem[1] < polinom[i][1])
         {
-            senior_mem[0] = polinom[i][0]; senior_mem[1] = polinom[i][1]; senior_mem[2] = polinom[i][2]; senior_mem[3] = polinom[i][3];
+            senior_mem[0] = polinom[i][0];
+            senior_mem[1] = polinom[i][1];
+            senior_mem[2] = polinom[i][2];
+            senior_mem[3] = polinom[i][3];
         }
         else if(senior_mem[1] == polinom[i][1] && senior_mem[2] < polinom[i][2])
         {
-            senior_mem[0] = polinom[i][0]; senior_mem[1] = polinom[i][1]; senior_mem[2] = polinom[i][2]; senior_mem[3] = polinom[i][3];
-        }
+            senior_mem[0] = polinom[i][0];
+            senior_mem[1] = polinom[i][1];
+            senior_mem[2] = polinom[i][2];
+            senior_mem[3] = polinom[i][3];        }
         else if(senior_mem[1] == polinom[i][1] && senior_mem[2] == polinom[i][2] && senior_mem[3] < polinom[i][3])
         {
-            senior_mem[0] = polinom[i][0]; senior_mem[1] = polinom[i][1]; senior_mem[2] = polinom[i][2]; senior_mem[3] = polinom[i][3];
-        }
+            senior_mem[0] = polinom[i][0];
+            senior_mem[1] = polinom[i][1];
+            senior_mem[2] = polinom[i][2];
+            senior_mem[3] = polinom[i][3];        }
     }
     cout << endl << senior_mem[0] << ' ' << senior_mem[1] << ' ' << senior_mem[2] << ' ' << senior_mem[3] << ' ' << endl;
 }
