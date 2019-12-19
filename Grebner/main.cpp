@@ -46,6 +46,7 @@ int main()
     Arr_polinom[0][0][0] = 3; Arr_senior_member[0][0] = 3;
     input_polinom(Arr_polinom[1]);
     output_polinom(Arr_polinom);
-    cout << "Hello World!" << endl;
+    cout << "He" << endl;
+
     return 0;
 }
