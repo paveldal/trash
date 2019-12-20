@@ -1,4 +1,5 @@
 #include <iostream>
+#include <fstream>
 
 using namespace std;
 //
@@ -6,17 +7,20 @@ using namespace std;
 //
 void input_polinom(int polinom[100][4])
 {
-    cout << "g[0][0] = ";
-    cin >> polinom[0][0];
+    ifstream in("input.txt");
+//    cout << "g[0][0] = ";
+    in >> polinom[0][0];
     polinom[0][0]++;
     for(int i = 1; i < polinom[0][0]; i++)
     {
         for(int j = 0; j < 4; j++)
         {
             cout << "g[" << i << "][" << j << "] = ";
-            cin >> polinom[i][j];
+
+            in >> polinom[i][j];
         }
     }
+    in.close();
 }
 //
 //      output polinom
@@ -90,16 +94,15 @@ void Senior_member(int polinom[100][4], int senior_mem[4])
 //
 int NOD(int a, int b)
 {
-    if(a < 0)
-        a *= -1;
-    if(b < 0)
-        b *= -1;
-    while (a && b)
-        if (a >= b)
-           a %= b;
+    int i, j;
+    i = abs(a);
+    j = abs(b);
+    while (i && j)
+        if (i >= j)
+           i %= j;
         else
-           b %= a;
-    return a | b;
+           j %= i;
+    return i | j;
 }
 //
 //      W = NOD(LT_g1, LT_g2)
@@ -120,7 +123,7 @@ void Omega(int W[4], int senior_mem_1[4], int senior_mem_2[4])
         W[3] = senior_mem_2[3];
     else
         W[3] = senior_mem_1[3];
-    if(W[1] != 0 && W[2] != 0 && W[3] != 0)
+    if(W[1] != 0 || W[2] != 0 || W[3] != 0)
     {
         W[0] = NOD(senior_mem_1[0], senior_mem_2[0]);
     }
@@ -217,12 +220,14 @@ void difference(int F[100][4], int polinom_1[100][4], int q_1[4], int polinom_2[
 int main()
 {
     int Arr_polinom[10][100][4] = {}, Arr_senior_member[10][4] = {}, W[4] = {}, q_1[4] = {}, q_2[4] = {}, F[100][4] = {};
-    Arr_polinom[0][0][0] = 2; Arr_senior_member[0][0] = 2;
+    Arr_polinom[0][0][0] = 3; Arr_senior_member[0][0] = 3;
     input_polinom(Arr_polinom[1]);
     input_polinom(Arr_polinom[2]);
+    input_polinom(Arr_polinom[3]);
 
     Senior_member(Arr_polinom[1], Arr_senior_member[1]);
     Senior_member(Arr_polinom[2], Arr_senior_member[2]);
+    Senior_member(Arr_polinom[3], Arr_senior_member[3]);
 /*
     Omega(W, Arr_senior_member[1], Arr_senior_member[2]);
 
@@ -260,7 +265,7 @@ int main()
     }
 */
     int i = 1, j = 2;
-    while(j < i)
+    while(j > i)
     {
         Omega(W, Arr_senior_member[i], Arr_senior_member[j]);
         if(W[0] != -1)
@@ -268,9 +273,53 @@ int main()
             division(q_1, Arr_senior_member[i], W);
             division(q_2, Arr_senior_member[j], W);
             difference(F, Arr_polinom[i], q_1, Arr_polinom[j], q_2);
+            if(F[0][0] != -1)
+            {
+                Arr_polinom[0][0][0]++;
+                Arr_senior_member[0][0]++;
+                Arr_polinom[Arr_polinom[0][0][0]][0][0] = F[0][0];
+                Senior_member(Arr_polinom[Arr_polinom[0][0][0]], Arr_senior_member[Arr_polinom[0][0][0]]);
+                for(int counter = 1; counter < F[0][0]; counter++)
+                {
+                    Arr_polinom[Arr_polinom[0][0][0]][counter][0] = F[counter][0];
+                    Arr_polinom[Arr_polinom[0][0][0]][counter][1] = F[counter][1];
+                    Arr_polinom[Arr_polinom[0][0][0]][counter][2] = F[counter][2];
+                    Arr_polinom[Arr_polinom[0][0][0]][counter][3] = F[counter][3];
 
+                }
+
+            }
+            i++;
+            if(i == j)
+            {
+                i = 1;
+                j++;
+            }
+            else
+            {
+                i++;
+                if(i == j)
+                {
+                    i = 1;
+                    j++;
+                }
+            }
         }
+        else
+        {
+            i++;
+            if(i == j)
+            {
+                i = 1;
+                j++;
+            }
+        }
+        if(Arr_polinom[0][0][0] == 8 || Arr_polinom[0][0][0] < j)
+            break;
+
     }
-    cout << "Hello World!" << endl;
+
+    output_polinom(Arr_polinom);
+    //cout << "Hello World!" << endl;
     return 0;
 }
