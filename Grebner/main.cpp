@@ -223,7 +223,7 @@ int main()
 
     Senior_member(Arr_polinom[1], Arr_senior_member[1]);
     Senior_member(Arr_polinom[2], Arr_senior_member[2]);
-
+/*
     Omega(W, Arr_senior_member[1], Arr_senior_member[2]);
 
     division(q_1, Arr_senior_member[1], W);
@@ -258,7 +258,19 @@ int main()
         if(F[i][3] != 0)
             cout << "Z^" << F[i][3];
     }
+*/
+    int i = 1, j = 2;
+    while(j < i)
+    {
+        Omega(W, Arr_senior_member[i], Arr_senior_member[j]);
+        if(W[0] != -1)
+        {
+            division(q_1, Arr_senior_member[i], W);
+            division(q_2, Arr_senior_member[j], W);
+            difference(F, Arr_polinom[i], q_1, Arr_polinom[j], q_2);
 
+        }
+    }
     cout << "Hello World!" << endl;
     return 0;
 }
