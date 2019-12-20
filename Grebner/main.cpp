@@ -7,7 +7,8 @@ using namespace std;
 //
 void input_polinom(int polinom[100][4])
 {
-    ifstream in("input.txt");
+    ifstream in;
+    in.open("input.txt");
 //    cout << "g[0][0] = ";
     in >> polinom[0][0];
     polinom[0][0]++;
@@ -15,8 +16,7 @@ void input_polinom(int polinom[100][4])
     {
         for(int j = 0; j < 4; j++)
         {
-            cout << "g[" << i << "][" << j << "] = ";
-
+//            cout << "g[" << i << "][" << j << "] = ";
             in >> polinom[i][j];
         }
     }
