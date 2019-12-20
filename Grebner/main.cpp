@@ -9,15 +9,15 @@ void input_polinom(int polinom[100][4])
 {
     ifstream in;
     in.open("input.txt");
-//    cout << "g[0][0] = ";
-    in >> polinom[0][0];
+    cout << "g[0][0] = ";
+    cin >> polinom[0][0];
     polinom[0][0]++;
     for(int i = 1; i < polinom[0][0]; i++)
     {
         for(int j = 0; j < 4; j++)
         {
-//            cout << "g[" << i << "][" << j << "] = ";
-            in >> polinom[i][j];
+            cout << "g[" << i << "][" << j << "] = ";
+            cin >> polinom[i][j];
         }
     }
     in.close();
@@ -278,7 +278,6 @@ int main()
                 Arr_polinom[0][0][0]++;
                 Arr_senior_member[0][0]++;
                 Arr_polinom[Arr_polinom[0][0][0]][0][0] = F[0][0];
-                Senior_member(Arr_polinom[Arr_polinom[0][0][0]], Arr_senior_member[Arr_polinom[0][0][0]]);
                 for(int counter = 1; counter < F[0][0]; counter++)
                 {
                     Arr_polinom[Arr_polinom[0][0][0]][counter][0] = F[counter][0];
@@ -287,13 +286,13 @@ int main()
                     Arr_polinom[Arr_polinom[0][0][0]][counter][3] = F[counter][3];
 
                 }
-
-            }
-            i++;
-            if(i == j)
-            {
-                i = 1;
-                j++;
+                Senior_member(Arr_polinom[Arr_polinom[0][0][0]], Arr_senior_member[Arr_polinom[0][0][0]]);
+                i++;
+                if(i == j)
+                {
+                    i = 1;
+                    j++;
+                }
             }
             else
             {
