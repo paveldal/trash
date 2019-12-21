@@ -21,7 +21,7 @@ int NOD(int a, int b)
 //
 int main()
 {
-    int a, b, c, x, y, d;
+    int a, b, c, x = 0, y = 0, d = 0;
     cout << "Ax + By = C";
     cout << endl << "input A = ";
     cin >> a;
