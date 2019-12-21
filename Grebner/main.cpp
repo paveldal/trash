@@ -1,5 +1,6 @@
 #include <iostream>
 #include <fstream>
+#include <stdlib.h>
 
 using namespace std;
 //
@@ -7,8 +8,8 @@ using namespace std;
 //
 void input_polinom(int polinom[100][4])
 {
-    ifstream in;
-    in.open("input.txt");
+    ifstream f("input.txt");
+    //fscanf(f, "%d", &polinom[0][0]);
     cout << "g[0][0] = ";
     cin >> polinom[0][0];
     polinom[0][0]++;
@@ -16,11 +17,13 @@ void input_polinom(int polinom[100][4])
     {
         for(int j = 0; j < 4; j++)
         {
+            //fscanf(f, "%d", &polinom[i][j]);
             cout << "g[" << i << "][" << j << "] = ";
-            cin >> polinom[i][j];
+           cin >> polinom[i][j];
         }
     }
-    in.close();
+    system("cls");
+    //fclose(f);
 }
 //
 //      output polinom
@@ -32,20 +35,22 @@ void output_polinom(int polinom[10][100][4])
         cout << endl << "g" << num << " = ";
         for(int i = 1; i < polinom[num][0][0]; i++)
         {
-            if(polinom[num][i][0] > 1)
-            {
-                cout <<"+";
-            }
-            cout << polinom[num][i][0];
 
-            if(polinom[num][i][1] != 0)
-                cout << "X^" << polinom[num][i][1];
+                if(polinom[num][i][0] > 1)
+                {
+                    cout <<"+";
+                }
+                cout << polinom[num][i][0];
 
-            if(polinom[num][i][2] != 0)
-                cout << "Y^" << polinom[num][i][2];
+                if(polinom[num][i][1] != 0)
+                    cout << "X^" << polinom[num][i][1];
 
-            if(polinom[num][i][3] != 0)
-                cout << "Z^" << polinom[num][i][3];
+                if(polinom[num][i][2] != 0)
+                    cout << "Y^" << polinom[num][i][2];
+
+                if(polinom[num][i][3] != 0)
+                    cout << "Z^" << polinom[num][i][3];
+
         }
         cout << endl;
     }
@@ -87,7 +92,7 @@ void Senior_member(int polinom[100][4], int senior_mem[4])
             senior_mem[3] = polinom[i][3];
         }
     }
-    cout << endl << senior_mem[0] << ' ' << senior_mem[1] << ' ' << senior_mem[2] << ' ' << senior_mem[3] << ' ' << endl;
+//    cout << endl << senior_mem[0] << ' ' << senior_mem[1] << ' ' << senior_mem[2] << ' ' << senior_mem[3] << ' ' << endl;
 }
 //
 //          NOD(LT_g1[0], LT_g2[0])
@@ -163,7 +168,10 @@ void shift_polinom(int polinom[100][4])
         i++;
     }
     if(polinom[0][0] == 1)
+    {
+        polinom = {};
         polinom[0][0] = -1;
+    }
 }
 //
 //      F=g_1*q_2 - g_2*q_1
@@ -216,9 +224,35 @@ void difference(int F[100][4], int polinom_1[100][4], int q_1[4], int polinom_2[
     }
     shift_polinom(F);
 }
+//
+//        reduction
+//
+void reduction(int F[100][4], int Arr_senior_member[10][4], int Arr_polinom[10][100][4])
+{
+    int q_3[4] = {}, q_4[4] = {}, LT_F[4] = {}, p = 1;
+    q_3[0] = 1;
+    Senior_member(F, LT_F);
+    while(p <= Arr_senior_member[0][0] && F[0][0] != -1)
+    {
+        if(LT_F[0] / Arr_senior_member[p][0] * Arr_senior_member[p][0] == LT_F[0]
+        && LT_F[1] >= Arr_senior_member[p][1]
+        && LT_F[2] >= Arr_senior_member[p][2]
+        && LT_F[3] >= Arr_senior_member[p][3])
+        {
+            division(q_4, LT_F, Arr_senior_member[p]);
+            difference(F, F, q_4, Arr_polinom[p], q_3);
+            Senior_member(F, LT_F);
+        }
+        else
+            p++;
+    }
+}
+
 
 int main()
 {
+    int q_3[4] = {}, q_4[4] = {}, LT_F[4] = {}, p = 1;
+    q_3[0] = 1;
     int Arr_polinom[10][100][4] = {}, Arr_senior_member[10][4] = {}, W[4] = {}, q_1[4] = {}, q_2[4] = {}, F[100][4] = {};
     Arr_polinom[0][0][0] = 3; Arr_senior_member[0][0] = 3;
     input_polinom(Arr_polinom[1]);
@@ -228,42 +262,7 @@ int main()
     Senior_member(Arr_polinom[1], Arr_senior_member[1]);
     Senior_member(Arr_polinom[2], Arr_senior_member[2]);
     Senior_member(Arr_polinom[3], Arr_senior_member[3]);
-/*
-    Omega(W, Arr_senior_member[1], Arr_senior_member[2]);
 
-    division(q_1, Arr_senior_member[1], W);
-    division(q_2, Arr_senior_member[2], W);
-
-    difference(F, Arr_polinom[1], q_1, Arr_polinom[2], q_2);
-
-    output_senior_member(Arr_senior_member);
-
-    cout << endl << W[0] << ' ' << W[1] << ' ' << W[2] << ' ' << W[3] << endl;
-    cout << endl << q_1[0] << ' ' << q_1[1] << ' ' << q_1[2] << ' ' << q_1[3] << endl;
-    cout << endl << q_2[0] << ' ' << q_2[1] << ' ' << q_2[2] << ' ' << q_2[3] << endl;
-
-    output_polinom(Arr_polinom);
-
-
-
-    for(int i = 1; i < F[0][0]; i++)
-    {
-        if(F[i][0] > 1)
-        {
-            cout <<"+";
-        }
-        cout << F[i][0];
-
-        if(F[i][1] != 0)
-            cout << "X^" << F[i][1];
-
-        if(F[i][2] != 0)
-            cout << "Y^" << F[i][2];
-
-        if(F[i][3] != 0)
-            cout << "Z^" << F[i][3];
-    }
-*/
     int i = 1, j = 2;
     while(j > i)
     {
@@ -273,6 +272,25 @@ int main()
             division(q_1, Arr_senior_member[i], W);
             division(q_2, Arr_senior_member[j], W);
             difference(F, Arr_polinom[i], q_1, Arr_polinom[j], q_2);
+//            reduction(F, Arr_senior_member, Arr_polinom);
+            Senior_member(F, LT_F);
+            p = 1;
+            while(p <= Arr_senior_member[0][0] && F[0][0] != -1)
+            {
+                if(LT_F[0] / Arr_senior_member[p][0] * Arr_senior_member[p][0] == LT_F[0]
+                && LT_F[1] >= Arr_senior_member[p][1]
+                && LT_F[2] >= Arr_senior_member[p][2]
+                && LT_F[3] >= Arr_senior_member[p][3])
+                {
+                    division(q_4, LT_F, Arr_senior_member[p]);
+                    difference(F, F, q_4, Arr_polinom[p], q_3);
+                    Senior_member(F, LT_F);
+                    shift_polinom(F);
+                    p = 1;
+                }
+                else
+                    p++;
+            }
             if(F[0][0] != -1)
             {
                 Arr_polinom[0][0][0]++;
@@ -319,6 +337,10 @@ int main()
     }
 
     output_polinom(Arr_polinom);
+
+    output_senior_member(Arr_senior_member);
+
+
     //cout << "Hello World!" << endl;
     return 0;
 }
