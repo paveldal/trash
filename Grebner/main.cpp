@@ -36,20 +36,32 @@ void output_polinom(int polinom[10][100][4])
         for(int i = 1; i < polinom[num][0][0]; i++)
         {
 
-                if(polinom[num][i][0] > 1)
+                if(polinom[num][i][0] > 0 && i != 1)
                 {
                     cout <<"+";
+                    if(polinom[num][i][0] > 1)
+                        cout << polinom[num][i][0];
                 }
-                cout << polinom[num][i][0];
+                else if(polinom[num][i][0] < 0 && polinom[num][i][0] == -1)
+                    cout << "-";
+                else if(polinom[num][i][0] < 0)
+                    cout << polinom[num][i][0];
 
-                if(polinom[num][i][1] != 0)
+
+                if(polinom[num][i][1] != 0 && polinom[num][i][1] > 1)
                     cout << "X^" << polinom[num][i][1];
+                else if(polinom[num][i][1] != 0)
+                    cout << "X";
 
-                if(polinom[num][i][2] != 0)
+                if(polinom[num][i][2] != 0 && polinom[num][i][2] > 1)
                     cout << "Y^" << polinom[num][i][2];
+                else if(polinom[num][i][2] != 0)
+                    cout << "Y";
 
-                if(polinom[num][i][3] != 0)
+                if(polinom[num][i][3] != 0 && polinom[num][i][3] > 1)
                     cout << "Z^" << polinom[num][i][3];
+                else if(polinom[num][i][3] != 0)
+                    cout << "Z";
 
         }
         cout << endl;
@@ -63,13 +75,30 @@ void output_senior_member(int senior_mem[10][4])
     for( int num = 1; num <= senior_mem[0][0]; num++)
     {
         cout << endl << "LT_g" << num << " = ";
-        cout << senior_mem[num][0];
-        if(senior_mem[num][1] != 0)
+
+        if(senior_mem[num][0]!= 1 && senior_mem[num][0] != -1)
+        {
+            cout << senior_mem[num][0];
+        }
+        else if(senior_mem[num][0] == -1)
+            cout << "-";
+        else if(senior_mem[num][0] == 1)
+            cout << "+";
+
+        if(senior_mem[num][1] != 0 && senior_mem[num][1] > 1)
             cout << "X^" << senior_mem[num][1];
-        if(senior_mem[num][2] != 0)
+        else if(senior_mem[num][1] != 0)
+            cout << "X";
+
+        if(senior_mem[num][2] != 0 && senior_mem[num][2] > 1)
             cout << "Y^" << senior_mem[num][2];
-        if(senior_mem[num][3] != 0)
+        else if(senior_mem[num][2] != 0)
+            cout << "Y";
+
+        if(senior_mem[num][3] != 0 && senior_mem[num][3] > 1)
             cout << "Z^" << senior_mem[num][3];
+        else if(senior_mem[num][3] != 0)
+            cout << "Z";
         cout << endl;
     }
 }
@@ -339,8 +368,87 @@ int main()
     output_polinom(Arr_polinom);
 
     output_senior_member(Arr_senior_member);
+/*
+    i = 1; j = 1;
+    while(i <= Arr_polinom[0][0][0])
+    {
+        while (j < i)
+        {
+            if(Arr_senior_member[j][0] / Arr_senior_member[i][0] * Arr_senior_member[i][0] == Arr_senior_member[j][0]
+                    && Arr_senior_member[j][1] >= Arr_senior_member[i][1]
+                    && Arr_senior_member[j][2] >= Arr_senior_member[i][2]
+                    && Arr_senior_member[j][3] >= Arr_senior_member[i][3])
+            {
+                Omega(W, Arr_senior_member[j], Arr_senior_member[i]);
+                division(q_1, Arr_senior_member[i], W);
+                division(q_2, Arr_senior_member[j], W);
+                if(q_2[1] == 0 && q_2[2] == 0 && q_2[3] == 0)
+                {
+                    for(int counter_1 = j; counter_1 < Arr_senior_member[0][0]; counter_1++)
+                    {
+                        Arr_polinom[counter_1][0][0] = Arr_polinom[counter_1+1][0][0];
+                        for(int counter_2 = 1; counter_2 < Arr_polinom[counter_1][0][0]; counter_2++)
+                        {
+                            Arr_polinom[counter_1][counter_2][0] = Arr_polinom[counter_1][counter_2][0];
+                            Arr_polinom[counter_1][counter_2][1] = Arr_polinom[counter_1][counter_2][1];
+                            Arr_polinom[counter_1][counter_2][2] = Arr_polinom[counter_1][counter_2][2];
+                            Arr_polinom[counter_1][counter_2][3] = Arr_polinom[counter_1][counter_2][3];
+                        }
+                        Arr_senior_member[counter_1][0] = Arr_senior_member[counter_1+1][0];
+                        Arr_senior_member[counter_1][1] = Arr_senior_member[counter_1+1][1];
+                        Arr_senior_member[counter_1][2] = Arr_senior_member[counter_1+1][2];
+                        Arr_senior_member[counter_1][3] = Arr_senior_member[counter_1+1][3];
+                    }
+                    Arr_polinom[0][0][0]--;
+                    Arr_senior_member[0][0]--;
+                    j--;
+                }
+            }
+            else if(Arr_senior_member[i][0] / Arr_senior_member[j][0] * Arr_senior_member[j][0] == Arr_senior_member[i][0]
+                    && Arr_senior_member[i][1] >= Arr_senior_member[j][1]
+                    && Arr_senior_member[i][2] >= Arr_senior_member[j][2]
+                    && Arr_senior_member[i][3] >= Arr_senior_member[j][3])
+            {
+                Omega(W, Arr_senior_member[j], Arr_senior_member[i]);
+                division(q_2, Arr_senior_member[i], W);
+                division(q_1, Arr_senior_member[j], W);
+                if(q_2[1] == 0 && q_2[2] == 0 && q_2[3] == 0)
+                {
+                    for(int counter_1 = i; counter_1 < Arr_senior_member[0][0]; counter_1++)
+                    {
+                        Arr_polinom[counter_1][0][0] = Arr_polinom[counter_1+1][0][0];
+                        for(int counter_2 = 1; counter_2 < Arr_polinom[counter_1][0][0]; counter_2++)
+                        {
+                            Arr_polinom[counter_1][counter_2][0] = Arr_polinom[counter_1][counter_2][0];
+                            Arr_polinom[counter_1][counter_2][1] = Arr_polinom[counter_1][counter_2][1];
+                            Arr_polinom[counter_1][counter_2][2] = Arr_polinom[counter_1][counter_2][2];
+                            Arr_polinom[counter_1][counter_2][3] = Arr_polinom[counter_1][counter_2][3];
+                        }
+                        Arr_senior_member[counter_1][0] = Arr_senior_member[counter_1+1][0];
+                        Arr_senior_member[counter_1][1] = Arr_senior_member[counter_1+1][1];
+                        Arr_senior_member[counter_1][2] = Arr_senior_member[counter_1+1][2];
+                        Arr_senior_member[counter_1][3] = Arr_senior_member[counter_1+1][3];
+                    }
+                    Arr_polinom[0][0][0]--;
+                    Arr_senior_member[0][0]--;
+                    j--;
+                }
+            }
+            j++;
+        }
+        if(i == j)
+        {
+            j = 1;
+            i++;
+        }
+        if(i > Arr_polinom[0][0][0])
+            break;
+    }
 
+    output_polinom(Arr_polinom);
 
+    output_senior_member(Arr_senior_member);
+*/
     //cout << "Hello World!" << endl;
     return 0;
 }
