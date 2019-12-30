@@ -4,6 +4,7 @@
 #include <QTextEdit>
 #include <QTextStream>
 #include <QKeyEvent>
+#include <QTextBrowser>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -16,7 +17,8 @@ MainWindow::MainWindow(QWidget *parent)
     gooo->setGeometry((QRect(QPoint(50, 10), QSize(60, 30))));
 
     clear = new QPushButton("clear", this);
-    clear->deleteLater();
+    clear->setGeometry((QRect(QPoint(50, 10), QSize(60, 30))));
+    clear->setVisible(false);
 //    gooo->setEnabled(false);
 //    gooo->deleteLater();
     back = new QPushButton("back", this);
@@ -33,10 +35,12 @@ MainWindow::MainWindow(QWidget *parent)
     number->setGeometry(QRect(QPoint(10, 10), QSize(30, 30)));
     number->setReadOnly(1);
 
+//    start = new QTextBrowser;
     start = new QTextEdit("start", this);
     start->setGeometry(QRect(QPoint(10, 50), QSize(100, 40)));
     start->setReadOnly(1);
 
+//    finish = new QTextBrowser;
     finish = new QTextEdit("finish", this);
     finish->setGeometry(QRect(QPoint(10, 100), QSize(100, 40)));
     finish->setReadOnly(1);
@@ -49,6 +53,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     QObject::connect(clear, SIGNAL(clicked()), SLOT(end_work()));
 
+    //connect(start, SIGNAL(cursorPositionChanged()), SLOT(check_start()));
 
 }
 
@@ -59,24 +64,28 @@ MainWindow::~MainWindow()
 
 void MainWindow::start_work()
 {
-    gooo->deleteLater();
-    clear->setGeometry((QRect(QPoint(50, 10), QSize(60, 30))));
+    gooo->setVisible(false);
+    clear->setVisible(true);
     string = this->input->toPlainText().trimmed();
     string_list = string.split('\n');
     counter = 1;
     start->setText(string_list[0]);
     finish->setText(string_list[1]);
     number->setText("1");
+    input->setReadOnly(1);
 }
 
 void MainWindow::end_work()
 {
-    clear->deleteLater();
-    gooo->setGeometry((QRect(QPoint(50, 10), QSize(60, 30))));
+
+    clear->setVisible(false);
+    gooo->setVisible(true);
     string_list.clear();
     start->setText("start");
     finish->setText("finish");
     number->setText("num");
+    input->setReadOnly(0);
+    input->setText("");
 }
 
 void MainWindow::next()
@@ -100,4 +109,8 @@ void MainWindow::prev()
         string.setNum(counter);
         number->setText(string);
     }
+}
+
+void MainWindow::check_start()
+{
 }

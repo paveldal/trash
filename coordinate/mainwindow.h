@@ -28,10 +28,12 @@ public slots:
     {
         close();
     }
+
     void next();
     void prev();
     void start_work();
     void end_work();
+    void check_start();
 private:
     Ui::MainWindow *ui;
 
