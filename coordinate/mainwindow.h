@@ -17,7 +17,7 @@ public:
 
     int counter;
     QString string;
-    QPushButton *back, *forward, *gooo;
+    QPushButton *back, *forward, *gooo, *clear;
     QTextEdit *input, *start, *finish, *number;
     QStringList string_list;
     MainWindow(QWidget *parent = nullptr);
@@ -28,10 +28,10 @@ public slots:
     {
         close();
     }
-    void output();
-    void work();
     void next();
     void prev();
+    void start_work();
+    void end_work();
 private:
     Ui::MainWindow *ui;
 

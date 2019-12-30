@@ -15,6 +15,10 @@ MainWindow::MainWindow(QWidget *parent)
     gooo = new QPushButton("gooo", this);
     gooo->setGeometry((QRect(QPoint(50, 10), QSize(60, 30))));
 
+    clear = new QPushButton("clear", this);
+    clear->deleteLater();
+//    gooo->setEnabled(false);
+//    gooo->deleteLater();
     back = new QPushButton("back", this);
     back->setGeometry(QRect(QPoint(10, 150),QSize(100, 30)));
 
@@ -27,18 +31,25 @@ MainWindow::MainWindow(QWidget *parent)
 
     number = new QTextEdit("num", this);
     number->setGeometry(QRect(QPoint(10, 10), QSize(30, 30)));
+    number->setReadOnly(1);
 
     start = new QTextEdit("start", this);
     start->setGeometry(QRect(QPoint(10, 50), QSize(100, 40)));
+    start->setReadOnly(1);
 
     finish = new QTextEdit("finish", this);
     finish->setGeometry(QRect(QPoint(10, 100), QSize(100, 40)));
+    finish->setReadOnly(1);
 
     QObject::connect(forward, SIGNAL(clicked()), SLOT(next()));
 
     QObject::connect(back, SIGNAL(clicked()), SLOT(prev()));
 
-    QObject::connect(gooo, SIGNAL(clicked()), SLOT(work()));
+    QObject::connect(gooo, SIGNAL(clicked()), SLOT(start_work()));
+
+    QObject::connect(clear, SIGNAL(clicked()), SLOT(end_work()));
+
+
 }
 
 MainWindow::~MainWindow()
@@ -46,13 +57,10 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::output()
+void MainWindow::start_work()
 {
-    input->setText("string");
-}
-
-void MainWindow::work()
-{
+    gooo->deleteLater();
+    clear->setGeometry((QRect(QPoint(50, 10), QSize(60, 30))));
     string = this->input->toPlainText().trimmed();
     string_list = string.split('\n');
     counter = 1;
@@ -60,6 +68,17 @@ void MainWindow::work()
     finish->setText(string_list[1]);
     number->setText("1");
 }
+
+void MainWindow::end_work()
+{
+    clear->deleteLater();
+    gooo->setGeometry((QRect(QPoint(50, 10), QSize(60, 30))));
+    string_list.clear();
+    start->setText("start");
+    finish->setText("finish");
+    number->setText("num");
+}
+
 void MainWindow::next()
 {
     if(counter < ((string_list.size() + 1) / 2))
