@@ -17,23 +17,20 @@ public:
 
     int counter;
     QString string;
-    QPushButton *back, *forward, *gooo, *clear;
-    QTextEdit *input, *start, *finish, *number;
+    QPushButton *back, *forward, *gooo, *clear, *start, *finish;
+    QTextEdit *input, *number;
     QStringList string_list;
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
 public slots:
-    void quit()
-    {
-        close();
-    }
-
+    void quit();
     void next();
     void prev();
     void start_work();
     void end_work();
-    void check_start();
+    void copy_st();
+    void copy_en();
 private:
     Ui::MainWindow *ui;
 

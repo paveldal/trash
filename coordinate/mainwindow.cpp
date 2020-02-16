@@ -3,8 +3,8 @@
 #include <QPushButton>
 #include <QTextEdit>
 #include <QTextStream>
-#include <QKeyEvent>
-#include <QTextBrowser>
+#include <QClipboard>
+#include <QMessageBox>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -14,15 +14,15 @@ MainWindow::MainWindow(QWidget *parent)
 
 //    QPushButton *back, *forward;
     gooo = new QPushButton("gooo", this);
-    gooo->setGeometry((QRect(QPoint(50, 10), QSize(60, 30))));
+    gooo->setGeometry((QRect(QPoint(50, 10), QSize(80, 30))));
 
     clear = new QPushButton("clear", this);
-    clear->setGeometry((QRect(QPoint(50, 10), QSize(60, 30))));
+    clear->setGeometry((QRect(QPoint(50, 10), QSize(80, 30))));
     clear->setVisible(false);
 //    gooo->setEnabled(false);
 //    gooo->deleteLater();
     back = new QPushButton("back", this);
-    back->setGeometry(QRect(QPoint(10, 150),QSize(100, 30)));
+    back->setGeometry(QRect(QPoint(10, 150),QSize(120, 30)));
 
     forward = new QPushButton("forward", this);
     forward->setGeometry(QRect(QPoint(130, 150),QSize(100, 30)));
@@ -36,14 +36,15 @@ MainWindow::MainWindow(QWidget *parent)
     number->setReadOnly(1);
 
 //    start = new QTextBrowser;
-    start = new QTextEdit("start", this);
-    start->setGeometry(QRect(QPoint(10, 50), QSize(100, 40)));
-    start->setReadOnly(1);
+    start = new QPushButton("start", this);
+    start->setGeometry(QRect(QPoint(10, 50), QSize(120, 40)));
+    start->setStyleSheet("background-color: rgb(164,194,244); color: rgb(0, 0, 0)");
+
 
 //    finish = new QTextBrowser;
-    finish = new QTextEdit("finish", this);
-    finish->setGeometry(QRect(QPoint(10, 100), QSize(100, 40)));
-    finish->setReadOnly(1);
+    finish = new QPushButton("finish", this);
+    finish->setGeometry(QRect(QPoint(10, 100), QSize(120, 40)));
+    finish->setStyleSheet("background-color: rgb(246,178,107); color: rgb(0, 0, 0)");
 
     QObject::connect(forward, SIGNAL(clicked()), SLOT(next()));
 
@@ -53,7 +54,9 @@ MainWindow::MainWindow(QWidget *parent)
 
     QObject::connect(clear, SIGNAL(clicked()), SLOT(end_work()));
 
-    //connect(start, SIGNAL(cursorPositionChanged()), SLOT(check_start()));
+    QObject::connect(start, SIGNAL(clicked()), SLOT(copy_st()));
+
+    QObject::connect(finish, SIGNAL(clicked()), SLOT(copy_en()));
 
 }
 
@@ -64,53 +67,97 @@ MainWindow::~MainWindow()
 
 void MainWindow::start_work()
 {
-    gooo->setVisible(false);
-    clear->setVisible(true);
+    counter = -1;
     string = this->input->toPlainText().trimmed();
     string_list = string.split('\n');
-    counter = 1;
-    start->setText(string_list[0]);
-    finish->setText(string_list[1]);
-    number->setText("1");
-    input->setReadOnly(1);
+    if(string_list.size() / 2 * 2 == string_list.size())
+    {
+        gooo->setVisible(false);
+        clear->setVisible(true);
+        counter = 1;
+        start->setText(string_list[0]);
+        finish->setText(string_list[1]);
+        number->setText("1");
+        input->setReadOnly(1);
+    }
+    else
+    {
+        QMessageBox msgBox;
+        msgBox.setText("Enter the correct data");
+        msgBox.exec();
+        string_list.clear();
+        input->setText("");
+    }
 }
 
 void MainWindow::end_work()
 {
-
-    clear->setVisible(false);
-    gooo->setVisible(true);
-    string_list.clear();
-    start->setText("start");
-    finish->setText("finish");
-    number->setText("num");
-    input->setReadOnly(0);
-    input->setText("");
+    QMessageBox msgBox;
+    msgBox.setText("Are you sure?");
+    msgBox.setStandardButtons(QMessageBox::No | QMessageBox::Yes);
+    msgBox.setDefaultButton(QMessageBox::No);
+    int ret = msgBox.exec();
+    switch (ret) {
+    case QMessageBox::No:
+        break;
+    case QMessageBox::Yes:
+        clear->setVisible(false);
+        gooo->setVisible(true);
+        string_list.clear();
+        start->setText("start");
+        finish->setText("finish");
+        number->setText("num");
+        input->setReadOnly(0);
+        input->setText("");
+        counter = -1;
+        break;
+    default:
+        break;
+    }
 }
 
 void MainWindow::next()
-{
-    if(counter < ((string_list.size() + 1) / 2))
-    {
-        counter++;
-        start->setText(string_list[(counter - 1) * 2]);
-        finish->setText(string_list[(counter - 1) * 2 + 1]);
-        string.setNum(counter);
-        number->setText(string);
-    }
+{   if(!string_list.isEmpty())
+        if(counter < ((string_list.size() + 1) / 2)
+        && counter != -1)
+        {
+            counter++;
+            start->setText(string_list[(counter - 1) * 2]);
+            finish->setText(string_list[(counter - 1) * 2 + 1]);
+            string.setNum(counter);
+            number->setText(string);
+        }
 }
 void MainWindow::prev()
 {
-    if(counter > 1)
-    {
-        counter--;
-        start->setText(string_list[(counter - 1) * 2]);
-        finish->setText(string_list[(counter - 1) * 2 + 1]);
-        string.setNum(counter);
-        number->setText(string);
-    }
+    if(!string_list.isEmpty())
+        if(counter > 1)
+        {
+            counter--;
+            start->setText(string_list[(counter - 1) * 2]);
+            finish->setText(string_list[(counter - 1) * 2 + 1]);
+            string.setNum(counter);
+            number->setText(string);
+        }
 }
 
-void MainWindow::check_start()
+void MainWindow::copy_st()
 {
+     QClipboard *clipboard = QGuiApplication::clipboard();
+     if(!string_list.isEmpty()
+     && counter != -1)
+        clipboard->setText(string_list[((counter - 1) * 2)]);
+}
+
+void MainWindow::copy_en()
+{
+     QClipboard *clipboard = QGuiApplication::clipboard();
+     if(!string_list.isEmpty()
+     && counter != -1)
+        clipboard->setText(string_list[((counter - 1) * 2 + 1)]);
+}
+
+void MainWindow::quit()
+{
+    close();
 }
